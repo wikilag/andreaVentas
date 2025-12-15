@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chorizos de la Abuela</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fdf5f5;
+    }
+
+    header {
+      background: #b22222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .categorias {
+      display: flex;
+      justify-content: space-around;
+      padding: 15px;
+      background: #fff;
+    }
+
+    .categorias button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #b22222;
+      color: white;
+    }
+
+    .contenedor {
+      padding: 15px;
+    }
+
+    .producto {
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .producto-info {
+      flex: 1;
+    }
+
+    .producto-controles button {
+      padding: 5px 10px;
+      margin: 0 3px;
+    }
+
+    #carrito {
+      background: #fff;
+      padding: 15px;
+      border-top: 3px solid #b22222;
+    }
+
+    #total {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>Chorizos de la Abuela</header>
+
+  <div class="categorias">
+    <button onclick="mostrarCategoria('Comidas')">Comidas</button>
+    <button onclick="mostrarCategoria('Bebidas')">Bebidas</button>
+    <button onclick="mostrarCategoria('Otros')">Otros</button>
+  </div>
+
+  <div id="productos" class="contenedor"></div>
+
+  <div id="carrito">
+    <h3>Carrito</h3>
+    <div id="listaCarrito"></div>
+    <div id="total">Total: $0</div>
+    <button onclick="imprimir()">Imprimir</button>
+  </div>
+
+  <script>
+    const productos = [
+      { nombre: 'Arepa + Queso', precio: '2.500', categoria: 'Comidas' },
+      { nombre: 'Arepa + 2 Quesos', precio: '3.500', categoria: 'Comidas' },
+      { nombre: 'Arepa + Queso + jamon', precio: '3.500', categoria: 'Comidas' },
+      { nombre: 'Arepa + 2 Queso + 2 Jamon', precio: '5.500', categoria: 'Comidas' },
+      { nombre: 'Arepa Pollo + Huevo de Codorniz', precio: '11.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Pollo + Jamon/ Queso + Huevo de Codorniz', precio: '11.500', categoria: 'Comidas' },
+      { nombre: 'Arepa Pollo + Jamon + Queso + Huevo de Codorniz', precio: '12.000', categoria: 'Comidas' },
+      { nombre: 'Chorizo + Arepa', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Carne + Huevo de Codorniz', precio: '12.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Carne + Jamon/ Queso + Huevo de Codorniz', precio: '12.500', categoria: 'Comidas' },
+      { nombre: 'Arepa Carne + Jamon + Queso + Huevo de Codorniz', precio: '13.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Rellena Mixta + Jamon + Queso+ Huevo de Codorniz', precio: '12.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Rellena Mixta + Jamon/ Queso + Huevo de Codorniz', precio: '11.500', categoria: 'Comidas' },
+      { nombre: 'Arepa Rellena Mixta + Huevo de Codorniz', precio: '11.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Rellena de Pincho +Chorizo + Queso +Jamon + Huevo de Codorniz', precio: '14.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Especial Rellena Mixta(Todo)+Chorizo+ Huevo de Codorniz', precio: '17.000', categoria: 'Comidas' },
+      { nombre: 'Arepa Sola', precio: '1.500', categoria: 'Comidas' },
+      { nombre: 'Chorizo + Arepa', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Chorizo + Arepa + Queso', precio: '7.000', categoria: 'Comidas' },
+      { nombre: 'Chorizo + Papa', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Chorizo Solo', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Pincho + Papa', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Pincho + Arepa', precio: '6.000', categoria: 'Comidas' },
+      { nombre: 'Pincho Solo', precio: '4.500', categoria: 'Comidas' },
+      { nombre: 'Pincho + Arepa + Queso', precio: '7.000', categoria: 'Comidas' },
+      { nombre: 'Adicion Queso', precio: '1.000', categoria: 'Comidas' },
+      { nombre: 'Adicion Jamon', precio: '1.000', categoria: 'Comidas' },
+      { nombre: 'Adicion Huevo de Codorniz unidad', precio: '500', categoria: 'Comidas' },
+      { nombre: 'Porcion de Papa', precio: '2.000', categoria: 'Comidas' },
+
+
+
+      { nombre: 'Gaseosa 500 ml', precio: '3.500', categoria: 'Bebidas' },
+      { nombre: 'Agua Pequeña', precio: '1.000', categoria: 'Bebidas' },
+      { nombre: 'Masato', precio: '2.000', categoria: 'Bebidas' },
+      { nombre: 'Tinto', precio: '1.200', categoria: 'Bebidas' },
+
+      { nombre: 'Cigarrillo', precio: '1.200', categoria: 'Otros' }
+    ];
+
+    let carrito = {};
+
+    function mostrarCategoria(cat) {
+      const cont = document.getElementById('productos');
+      cont.innerHTML = '';
+      productos.filter(p => p.categoria === cat).forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'producto';
+        div.innerHTML = `
+      <div class="producto-info">${p.nombre}<br>$${p.precio}</div>
+      <div class="producto-controles">
+        <button onclick="agregar('${p.nombre}')">+</button>
+        <button onclick="quitar('${p.nombre}')">-</button>
+      </div>`;
+        cont.appendChild(div);
+      });
+    }
+
+    function agregar(nombre) {
+      const prod = productos.find(p => p.nombre === nombre);
+      if (!carrito[nombre]) carrito[nombre] = { ...prod, cantidad: 0 };
+      carrito[nombre].cantidad++;
+      actualizarCarrito();
+    }
+
+    function quitar(nombre) {
+      if (!carrito[nombre]) return;
+      carrito[nombre].cantidad--;
+      if (carrito[nombre].cantidad <= 0) delete carrito[nombre];
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('listaCarrito');
+      lista.innerHTML = '';
+      let total = 0;
+      Object.values(carrito).forEach(p => {
+        total += p.precio * p.cantidad;
+        const div = document.createElement('div');
+        div.innerText = `${p.cantidad} x ${p.nombre} = $${p.precio * p.cantidad}`;
+        lista.appendChild(div);
+      });
+      document.getElementById('total').innerText = 'Total: $' + total;
+    }
+
+    function imprimir() {
+      window.print();
+    }
+  </script>
+
+</body>
+
+</html>
